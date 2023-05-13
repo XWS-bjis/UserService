@@ -1,5 +1,6 @@
 package com.UserService.service;
 
+import com.UserService.exception.UserNotFoundException;
 import com.UserService.mapper.UserMapper;
 import com.UserService.dto.UserRegistrationDTO;
 import com.UserService.model.User;
@@ -22,6 +23,11 @@ public class UserService {
         //TO DO: Check database, if username already exists return null
         return userRepository.save(userMapper.create(userRegistrationDTO));
     }
+
+    public User findById(String id) {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User by id" + id + "was not found"));
+    }
+
 
     public  User update(String id, UserRegistrationDTO userRegistrationDTO){
         Optional<User> user = userRepository.findById(id);
