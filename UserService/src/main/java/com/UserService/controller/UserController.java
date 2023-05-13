@@ -24,6 +24,12 @@ public class UserController {
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
+    @GetMapping("/find/{id}")
+    public ResponseEntity<User> findById(@PathVariable("id") String id){
+        User user = userService.findById(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Optional<User>> update(@PathVariable("id") String id, @RequestBody UserRegistrationDTO userRegistrationDTO){
         User user = userService.update(id, userRegistrationDTO);
