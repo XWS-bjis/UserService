@@ -1,5 +1,6 @@
 package com.UserService.service;
 
+import com.UserService.dto.LoginRequest;
 import com.UserService.exception.UserNotFoundException;
 import com.UserService.mapper.UserMapper;
 import com.UserService.dto.UserRegistrationDTO;
@@ -20,28 +21,38 @@ public class UserService {
     private UserRepository userRepository;
 
     public User register(UserRegistrationDTO userRegistrationDTO) {
-        //TO DO: Check database, if username already exists return null
-        return userRepository.save(userMapper.create(userRegistrationDTO));
+        User user = userMapper.create(userRegistrationDTO);
+        return userRepository.save(user);
     }
 
-    public User findById(String id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User by id" + id + "was not found"));
+    public UserRegistrationDTO findById(String id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User by id" + id + "was not found"));
+        return userMapper.EntityToDto(user);
     }
 
 
-    public  User update(String id, UserRegistrationDTO userRegistrationDTO){
+    public  UserRegistrationDTO update(String id, UserRegistrationDTO userRegistrationDTO){
         Optional<User> user = userRepository.findById(id);
         if(user.isPresent()) {
             User userUpdate = userMapper.DtoToEntity(user.get(), userRegistrationDTO);
             userRepository.save(userUpdate);
-            return userUpdate;
+            UserRegistrationDTO updatedUser = userMapper.EntityToDto(userUpdate);
+            return updatedUser;
         }
-
         return null;
     }
 
     public void delete(String id){
         Optional<User> user = userRepository.findById(id);
         userRepository.delete(user.get());
+    }
+
+    public User findByUsernameAndPassword(LoginRequest loginRequest){
+        Optional<User> user = userRepository.findByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
+        if(user.isPresent()){
+           // UserRegistrationDTO foundUser = userMapper.EntityToDto(user.get());
+            return user.get();
+        }
+        return null;
     }
 }
