@@ -6,9 +6,14 @@ import com.UserService.dto.UserRegistrationDTO;
 import com.UserService.model.User;
 import com.UserService.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 
 @RestController
@@ -18,6 +23,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
 
     @PostMapping
     public ResponseEntity register(@RequestBody UserRegistrationDTO userRegistrationDTO){
@@ -51,5 +60,18 @@ public class UserController {
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
         }
         return new ResponseEntity<>(new LoginResponse(), HttpStatus.BAD_REQUEST);
+    }
+
+
+    @GetMapping("/reservation/{id}")
+    public ResponseEntity getClaimPropertyById(@PathVariable String id){
+        String claimsControllerUrl = "http://reservation-service:8083/api/reservation/user/"+id;
+        ResponseEntity<List<Object>> response = restTemplate.exchange(
+                claimsControllerUrl,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Object>>() {}
+        );
+        return response;
     }
 }
