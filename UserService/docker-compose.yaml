@@ -7,6 +7,8 @@ services:
       - 8084:8084
     depends_on:
       - mongodb
+    environment:
+      eureka.client.service-url.defaultZone: http://airline:8761/eureka
   mongodb:
     image: mongo
     container_name: mongodb_user
@@ -33,4 +35,4 @@ volumes:
 
 networks:
   default:
-    name: mongodb_network
+    name: service-discovery_default
