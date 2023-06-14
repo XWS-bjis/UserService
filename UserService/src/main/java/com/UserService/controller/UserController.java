@@ -74,4 +74,9 @@ public class UserController {
         );
         return response;
     }
+
+    @GetMapping
+    public ResponseEntity<List<User>> getAll() {
+        return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
+    }
 }
