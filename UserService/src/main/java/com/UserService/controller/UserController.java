@@ -79,4 +79,10 @@ public class UserController {
     public ResponseEntity<List<User>> getAll() {
         return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
     }
+
+    @GetMapping("/featured-hosts")
+    public ResponseEntity<List<String>> getAllFeaturedHosts(){
+        System.out.println("Pozdravvvvvvv");
+        return new ResponseEntity<>(userService.getAllFeaturedHosts(), HttpStatus.OK);
+    }
 }

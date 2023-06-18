@@ -9,6 +9,7 @@ import com.UserService.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,5 +60,16 @@ public class UserService {
 
     public List<User> getAll() {
         return userRepository.findAll();
+    }
+
+    public List<String> getAllFeaturedHosts(){
+        List<User> users = userRepository.findAll();
+        List<String> highlightedHost = new ArrayList<>();
+        for (User user: users){
+            if(user.isHighlightedHost() == true){
+                highlightedHost.add(user.getId());
+            }
+        }
+        return highlightedHost;
     }
 }
