@@ -48,4 +48,33 @@ public class GradeService {
         }
         return userGradeExist;
     }
+
+    public void edit(Grade grade, String hostId){
+        delete(hostId, grade.getReviewerId());
+        create(grade, hostId);
+    }
+
+    public void delete(String hostId, String userId){
+        User host = userRepository.findById(hostId).orElse(null);
+        if(host != null){
+            List<Grade> hostGrades = host.getGrades();
+            if(hostGrades == null) hostGrades = new ArrayList<>();
+            hostGrades = getGradeListWithoutUserGrade(hostGrades, userId);
+            host.setGrades(hostGrades);
+            host.setAvgGrade(calculateAvgGrade(hostGrades));
+            userRepository.save(host);
+        }
+    }
+
+    private List<Grade> getGradeListWithoutUserGrade(List<Grade> grades, String userId){
+        int indexForDeletion = 0;
+        for(int i = 0; i < grades.size(); i++){
+            if(grades.get(i).getReviewerId().equals(userId)){
+                indexForDeletion = i;
+                break;
+            }
+        }
+        grades.remove(indexForDeletion);
+        return grades;
+    }
 }

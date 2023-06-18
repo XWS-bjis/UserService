@@ -21,4 +21,16 @@ public class GradeController {
         gradeService.create(grade, hostId);
         return new ResponseEntity(HttpStatus.CREATED);
     }
+
+    @PutMapping("/{hostId}")
+    public ResponseEntity edit(@RequestBody Grade grade, @PathVariable("hostId") String hostId){
+        gradeService.edit(grade, hostId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{hostId}/{userId}")
+    public ResponseEntity delete(@PathVariable("hostId") String hostId, @PathVariable("userId") String userId){
+        gradeService.delete(hostId, userId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
