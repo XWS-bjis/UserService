@@ -85,4 +85,25 @@ public class UserController {
         System.out.println("Pozdravvvvvvv");
         return new ResponseEntity<>(userService.getAllFeaturedHosts(), HttpStatus.OK);
     }
+
+    @PutMapping("/featured-host/{id}")
+    public ResponseEntity updateFeaturedHost(@PathVariable("id") String id){
+        userService.updateFeaturedHost(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/visited-hosts")
+    public ResponseEntity<List<User>> getAllHostsByGuest(@PathVariable("id") String id){
+//        String reservationControllerURL = "http://accommodation:8080/accommodation/host-identifiers/guest/"+id;
+//        ResponseEntity<List<String>> response = restTemplate.exchange(
+//                reservationControllerURL,
+//                HttpMethod.GET,
+//                null,
+//                new ParameterizedTypeReference<List<String>>() {}
+//        );
+//        return response;
+        return new ResponseEntity<>(userService.getRatedHostsByGuest(id), HttpStatus.OK);
+
+
+    }
 }

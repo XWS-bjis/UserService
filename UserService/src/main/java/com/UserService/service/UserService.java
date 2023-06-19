@@ -7,7 +7,11 @@ import com.UserService.dto.UserRegistrationDTO;
 import com.UserService.model.User;
 import com.UserService.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +25,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public User register(UserRegistrationDTO userRegistrationDTO) {
         User user = userMapper.create(userRegistrationDTO);
@@ -71,5 +78,38 @@ public class UserService {
             }
         }
         return highlightedHost;
+    }
+
+    public void updateFeaturedHost(String id){
+        User user = userRepository.findById(id).orElse(null);
+        if(user != null){
+            if(user.getAvgGrade() >= 4.5){
+                user.setHighlightedHost(true);
+                userRepository.save(user);
+            }
+        }
+    }
+
+    public List<User> getRatedHostsByGuest(String id){
+        String reservationControllerURL = "http://accommodation:8080/accommodation/host-identifiers/guest/"+id;
+        ResponseEntity<List<String>> response = restTemplate.exchange(
+                reservationControllerURL,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<String>>() {}
+        );
+        List<User> ratedHosts = new ArrayList<>();
+        if(response.getBody().size() > 0){
+            List<User> hosts = userRepository.findAll();
+            for(String hostId: response.getBody()){
+                for(User user: hosts){
+                    if(user.getId().equals(hostId)){
+                        ratedHosts.add(user);
+                    }
+                }
+            }
+        }
+        return ratedHosts;
+
     }
 }
