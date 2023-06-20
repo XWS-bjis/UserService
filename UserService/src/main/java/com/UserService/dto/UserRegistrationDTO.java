@@ -14,4 +14,5 @@ public class UserRegistrationDTO {
     private String surname;
     private Address address;
     private String role;
+    private boolean isHighlightedHost;
 }

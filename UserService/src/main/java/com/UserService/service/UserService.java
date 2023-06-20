@@ -83,8 +83,11 @@ public class UserService {
     public void updateFeaturedHost(String id){
         User user = userRepository.findById(id).orElse(null);
         if(user != null){
-            if(user.getAvgGrade() >= 4.5){
+            if(user.getAvgGrade() >= 4.7){
                 user.setHighlightedHost(true);
+                userRepository.save(user);
+            }else{
+                user.setHighlightedHost(false);
                 userRepository.save(user);
             }
         }
