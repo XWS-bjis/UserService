@@ -15,4 +15,7 @@ public class User {
     private Role role;
     private List<String> reservationId;
     private Integer cancellationNumber;
+    private boolean isHighlightedHost;
+    private List<Grade> grades;
+    private Double avgGrade;
 }

@@ -56,6 +56,7 @@ public class UserMapper {
         user.setPassword(userEntity.getPassword());
         user.setEmail(userEntity.getEmail());
         user.setAddress(userEntity.getAddress());
+        user.setHighlightedHost(userEntity.isHighlightedHost());
         return user;
     }
 }
